@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +7,8 @@
      
     
     <script>
+      document.documentElement.classList.remove("no-js");
+      document.documentElement.classList.add("js");
       // Apply sidebar state immediately to prevent flash
       (function () {
         try {
@@ -49,7 +51,7 @@
 
         </div>
         
-        <div class="search-container">
+        <div class="search-container js-only">
           <input type="text" id="search-input" placeholder="Search..." />
           <div id="search-results" class="search-results"></div>
         </div>
@@ -57,7 +59,7 @@
       </header>
 
       <div class="layout">
-        <div class="sidebar-toggle" aria-label="Toggle sidebar">
+        <div class="sidebar-toggle js-only" aria-label="Toggle sidebar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -131,6 +133,9 @@ current main current main branch</p>
 <h2 id="breaking-changes">Breaking changes</h2>
 <ul>
 <li>
+<p>Upgrade to nixpkgs 26.06.</p>
+</li>
+<li>
 <p>Nixpkgs has merged a fully incompatible rewrite of
 <code>vimPlugins.nvim-treesitter</code>. Namely, it changes from the frozen <code>master</code>
 branch to the new main branch. This change removes incremental selections, so
@@ -162,6 +167,9 @@ controlled via <code>vim.options.foldenable</code> directly instead. RIP
 upstream codecompanion.nvim v19 rename. If you set options like
 <code>setupOpts.strategies.chat.adapter</code>, rename them to
 <code>setupOpts.interactions.chat.adapter</code>.</p>
+</li>
+<li>
+<p><code>vim.maps</code> is deprecated, use <code>vim.keymaps</code> instead.</p>
 </li>
 </ul>
 <p><a href="https://github.com/snoweuph">Snoweuph</a></p>
@@ -283,6 +291,11 @@ module provides jsx/tsx support. This is a step of cleaning up the Typescript
 module for the future.</p>
 </li>
 </ul>
+<p><a href="https://github.com/dathegreat">dathegreat</a>:</p>
+<ul>
+<li>Haskell LSP now defaults to haskell-language-server, haskell-tools based LSP
+support is moved to <code>vim.languages.haskell.extensions.haskell-tools</code></li>
+</ul>
 <p><a href="https://github.com/caueanjos">CaueAnjos</a></p>
 <ul>
 <li>Renamed <code>roslyn_ls</code> to <code>roslyn-ls</code></li>
@@ -290,6 +303,11 @@ module for the future.</p>
 <li>Turned <code>csharpls-extended-lsp-nvim</code> into an extension disabled by default</li>
 </ul>
 <h2 id="sec-release-0-9-changelog">Changelog</h2>
+<p><a href="https://github.com/bovf">bovf</a>:</p>
+<ul>
+<li>Removed the deprecated <code>system_open</code> setup option from <code>nvim-tree.lua</code> to
+avoid startup warnings now that upstream uses <code>vim.ui.open()</code>.</li>
+</ul>
 <p><a href="https://github.com/ErinaYip">ErinaYip</a>:</p>
 <ul>
 <li>Fixed and updated <code>lualine</code> options:
@@ -346,6 +364,11 @@ treesitter grammars were changed to prefer <code>grammarPlugins</code> over
 <li>Lazyload noice.nvim and nvim-web-devicons on <code>DeferredUIEnter</code></li>
 <li>Allow nulling treesitter packages for various language modules, filter <code>null</code>
 values in <code>vim.treesitter.grammars</code>.</li>
+<li>Added <a class="option-reference" href="options.html#option-vim.filetype"><code class="nixos-option">vim.filetype</code></a> module option for registering custom filetypes
+via <code>vim.filetype.add()</code>, placed in the DAG before <code>lazyConfigs</code> so plugins
+can lazy-load on registered filetypes.</li>
+<li>Moved <code>neovim/mappings</code> to <code>neovim/init/mappings.nix</code> to consolidate core
+Neovim init options.</li>
 </ul>
 <p><a href="https://github.com/jfeo">jfeo</a>:</p>
 <ul>
@@ -377,6 +400,23 @@ hard-coded options as default values.</li>
 <ul>
 <li>Updated nix language plugin to use pkgs.nixfmt instead of
 pkgs.nixfmt-rfc-style</li>
+</ul>
+<p><a href="https://github.com/dathegreat">dathegreat</a>:</p>
+<ul>
+<li>
+<p>Fixed invalid keys in the haskell-tools configuration</p>
+</li>
+<li>
+<p>Split haskell configuration into <code>lsp/presets/haskell-language-server.nix</code> and
+<code>languages/haskell.nix</code></p>
+</li>
+<li>
+<p>Made the haskell LSP and formatter configurable</p>
+</li>
+<li>
+<p>Added <a href="https://github.com/hat0uma/csvview.nvim">csvview.nvim</a> support under
+<code>vim.utility.csvview</code> for rendering CSV/TSV files as aligned tables.</p>
+</li>
 </ul>
 <p><a href="https://github.com/alfarelcynthesis">alfarel</a>:</p>
 <ul>
@@ -503,6 +543,16 @@ formatter.</p>
 <p><a href="https://github.com/snoweuph">Snoweuph</a></p>
 <ul>
 <li>
+<p>Added <a class="option-reference" href="options.html#option-vim.lsp.presets.jls.enable"><code class="nixos-option">vim.lsp.presets.jls.enable</code></a> and made it available under
+<code>vim.languages.java.lsp.servers</code>.</p>
+</li>
+<li>
+<p>Added <a class="option-reference" href="options.html#option-vim.languages.java.dap.enable"><code class="nixos-option">vim.languages.java.dap.enable</code></a> with the <code>jls</code> DAP.</p>
+</li>
+<li>
+<p>Use nvf nix Tree-sitter injections in the docs.</p>
+</li>
+<li>
 <p>Allow the usage of <code>pks.tree-sitter-grammars</code> in
 <a class="option-reference" href="options.html#option-vim.treesitter.grammars"><code class="nixos-option">vim.treesitter.grammars</code></a> and language module tree-sitter package
 options created via <code>mkGrammarOption</code>.</p>
@@ -511,12 +561,25 @@ options created via <code>mkGrammarOption</code>.</p>
 <p>Add <code>emmet-ls</code> to the supported LSPs for all languages it supports.</p>
 </li>
 <li>
+<p>Added <code>gitlab-ci-ls</code>.</p>
+</li>
+<li>
+<p>Added <code>phpantom</code> LSP preset and into <code>languages.php</code>.</p>
+</li>
+<li>
+<p>Moved extra diagnostic modules under <code>diagnostics.presets.&lt;name&gt;</code> this will
+allow for more flexibility in the future for nvf.</p>
+</li>
+<li>
+<p>Added <a class="option-reference" href="options.html#option-vim.diagnostics.presets.cpplint.enable"><code class="nixos-option">vim.diagnostics.presets.cpplint.enable</code></a>.</p>
+</li>
+<li>
 <p>Added <a class="option-reference" href="options.html#option-vim.treesitter.queries"><code class="nixos-option">vim.treesitter.queries</code></a> to support adding custom queries.</p>
 </li>
 <li>
 <p>Added injections for <code>query = '' ... ''</code> as <code>query</code> and <code>mkLualine '' ... ''</code>,
-<code>entryAnywhere '' ... ''</code>, <code>entryBefore ] '' ... ''</code>,
-<code>entryAfter ] '' ... ''</code> as <code>lua</code> in nix.</p>
+<code>entryAnywhere '' ... ''</code>, <code>entryBefore [] '' ... ''</code>,
+<code>entryAfter [] '' ... ''</code> as <code>lua</code> in nix.</p>
 </li>
 <li>
 <p>Added <a class="option-reference" href="options.html#option-vim.languages.tera.treesitter.injection"><code class="nixos-option">vim.languages.tera.treesitter.injection</code></a> to configure, what
@@ -539,13 +602,15 @@ This is mostly use full for Markdown code block injections.</p>
 </ul>
 </li>
 <li>
+<p>Fix <code>astro-language-server</code> missing typescript.</p>
+</li>
+<li>
+<p>Fixed broken filetypes.</p>
+</li>
+<li>
 <p>Added <code>vim.lsp.presets.&lt;name&gt;</code> to contain LSP configurations. This allows for
 more flexibility in nvf and reuse of LSPs across languages. Dropped
 <code>deprecatedSingleOrListOf</code> in favor of <code>listOf</code> for the affected LSP options.</p>
-</li>
-<li>
-<p>Added <a class="option-reference" href="options.html#option-vim.lsp.presets.docker-language-server.enable"><code class="nixos-option">vim.lsp.presets.docker-language-server.enable</code></a> for Docker
-support.</p>
 </li>
 <li>
 <p>Added <a class="option-reference" href="options.html#option-vim.lsp.presets.angular-language-server.enable"><code class="nixos-option">vim.lsp.presets.angular-language-server.enable</code></a> for Angular
@@ -580,9 +645,20 @@ tree-sitter incompatibilities.</p>
 <code>languages.lua</code>.</p>
 </li>
 <li>
+<p>Added the <a href="https://github.com/marcoroth/stimulus-lsp">Stimulus LSP</a> as LSP
+preset.</p>
+</li>
+<li>
 <p>Added <code>languages.docker</code> for Docker and Docker-Compose support. Thanks to
 <a href="https://github.com/poseidon-rises">poseidon-rises</a> for creating most of it in
 <a href="https://github.com/NotAShelf/nvf/pull/1104">!1104</a>.</p>
+</li>
+<li>
+<p>Added <a class="option-reference" href="options.html#option-vim.lsp.presets.docker-language-server.enable"><code class="nixos-option">vim.lsp.presets.docker-language-server.enable</code></a> for Docker
+support.</p>
+</li>
+<li>
+<p>Mapped <code>dockercompose</code> to be highlighted by treesitter as <code>yaml</code>.</p>
 </li>
 <li>
 <p>Added <a href="https://mdformat.rtfd.io/"><code>mdformat</code></a> support to <code>languages.markdown</code>
@@ -729,6 +805,9 @@ you're crazy.</p>
 <p>Added coverage support (<code>vim.utility.crazy-coverage</code>) via
 <a href="https://github.com/mr-u0b0dy/crazy-coverage.nvim"><code>crazy-coverage.nvim</code></a>.</p>
 </li>
+<li>
+<p>Enable <code>nil.settings.nil.nix.autoArchive</code> by default.</p>
+</li>
 </ul>
 <p><a href="https://github.com/vagahbond">vagahbond</a>: [codewindow.nvim]:
 <a href="https://github.com/gorbit99/codewindow.nvim">https://github.com/gorbit99/codewindow.nvim</a></p>
@@ -757,6 +836,7 @@ plugin.</li>
 <p><a href="https://github.com/horriblename">horriblename</a>:</p>
 <ul>
 <li>Ignore terminals by default in spell-checking</li>
+<li>Add default error filter to lsp-signature that prevents error spam.</li>
 </ul>
 <p><a href="https://poz.pet">poz</a>:</p>
 <ul>
@@ -822,6 +902,15 @@ string in order to allow percentage values like <code>"20%"</code></li>
 <li>Add <a href="https://github.com/phpstan/phpstan">PHPStan</a> as a formatter for <code>vim.languages.php</code>.</li>
 <li>Add <code>prettier</code> and <code>prettierd</code> as supported formatters to
 <code>vim.languages.json</code>.</li>
+</ul>
+<p><a href="https://github.com/BrockoliniMorgan">BrockoliniMorgan</a></p>
+<ul>
+<li>Renamed
+<code>languages.typescript.extensions.ts-error-translator.auto_override_publish_diagnostics</code></li>
+</ul>
+<p><a href="https://github.com/marciosobel">marciosobel</a></p>
+<ul>
+<li>Added <code>goimports</code> as supported formatters to <code>vim.languages.go</code>.</li>
 </ul>
 <!-- vim: set textwidth=80: -->
 <h1 id="sec-release-0-8">Release 0.8</h1>
@@ -1512,8 +1601,8 @@ will enable the <code>typst-lsp</code> language server, and the <code>typstfmt</
 <ul>
 <li>
 <p>Modified type for
-<a class="option-reference" href="options.html#option-vim.visuals.fidget-nvim.setupOpts.progress.display.overrides"><code class="nixos-option">vim.visuals.fidget-nvim.setupOpts.progress.display.overrides</code></a> from
-<code>anything</code> to a <code>submodule</code> for better type checking.</p>
+<code>vim.visuals.fidget-nvim.setupOpts.progress.display.overrides</code> from <code>anything</code>
+to a <code>submodule</code> for better type checking.</p>
 </li>
 <li>
 <p>Fix null <code>vim.lsp.mappings</code> generating an error and not being filtered out.</p>
@@ -1524,8 +1613,8 @@ group for <code>Normal</code>, <code>NormalFloat</code>, <code>LineNr</code>, <c
 <code>NvimTreeNormal</code> to <code>none</code>.</p>
 </li>
 <li>
-<p>Fix <a class="option-reference" href="options.html#option-vim.ui.smartcolumn.setupOpts.custom_colorcolumn"><code class="nixos-option">vim.ui.smartcolumn.setupOpts.custom_colorcolumn</code></a> using the wrong
-type <code>int</code> instead of the expected type <code>string</code>.</p>
+<p>Fix <code>vim.ui.smartcolumn.setupOpts.custom_colorcolumn</code> using the wrong type
+<code>int</code> instead of the expected type <code>string</code>.</p>
 </li>
 </ul>
 <p><a href="https://github.com/horriblename">horriblename</a>:</p>
@@ -1631,7 +1720,7 @@ default.</p>
 friendly-snippets for bundled snippets.
 <a class="option-reference" href="options.html#option-vim.snippets.luasnip.enable"><code class="nixos-option">vim.snippets.luasnip.enable</code></a> can be used to toggle Luasnip.</li>
 <li>Add sorting function options for completion sources under
-<a class="option-reference" href="options.html#option-vim.autocomplete.nvim-cmp.setupOpts.sorting.comparators"><code class="nixos-option">vim.autocomplete.nvim-cmp.setupOpts.sorting.comparators</code></a></li>
+<code>vim.autocomplete.nvim-cmp.setupOpts.sorting.comparators</code></li>
 </ul>
 </li>
 <li>
@@ -2017,9 +2106,9 @@ wrapper PATH, making said packages available while inside the Neovim session.</p
 <code>setupOpts</code> while it is enabled.</p>
 </li>
 <li>
-<p>Added <a class="option-reference" href="options.html#option-vim.notify.nvim-notify.setupOpts.render"><code class="nixos-option">vim.notify.nvim-notify.setupOpts.render</code></a> which takes either a
-string of enum, or a Lua function. The default is "compact", but you may
-change it according to nvim-notify documentation.</p>
+<p>Added <code>vim.notify.nvim-notify.setupOpts.render</code> which takes either a string of
+enum, or a Lua function. The default is "compact", but you may change it
+according to nvim-notify documentation.</p>
 </li>
 </ul>
 <h1 id="sec-release-0-5">Release 0.5</h1>
